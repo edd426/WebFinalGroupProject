@@ -1,0 +1,21 @@
+.form-row{
+	margin: 20px;
+}
+
+.form-group{
+	margin: 20px;
+}
+
+.row{
+	margin: 20px;
+}
+
+#errormessage{
+	color: red;
+	margin: 0px;
+	padding: 0px;
+}
+
+.error{
+    background: pink;
+}
