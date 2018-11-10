@@ -46,6 +46,13 @@ CREATE TABLE IF NOT EXISTS `reservation` (
     FOREIGN KEY (UserID) REFERENCES user(UserID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `favorite` (
+    `UserID` int NOT NULL,
+    `RoomID` int NOT NULL,
+    PRIMARY KEY (UserID, RoomID),
+    FOREIGN KEY (RoomID) REFERENCES room(RoomID),
+    FOREIGN KEY (UserID) REFERENCES user(UserID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `room` (`Name`, `Occupancy`) VALUES
 	('RoomA', 25),
@@ -81,3 +88,9 @@ INSERT INTO `room_feature` (`RoomID`, `FeatureID`) VALUES
 INSERT INTO `admin` (`UserID`) VALUES
 	('1'),
 	('2');
+
+
+INSERT INTO `favorite` (`UserID`, `RoomID`) VALUES
+	('1', '1'),
+	('2', '1'),
+	('2', '2');
