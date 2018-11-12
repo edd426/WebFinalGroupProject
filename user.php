@@ -43,7 +43,6 @@ if (!$conn){
 	exit;
 }
 
-$sql = "SELECT StartTime, EndTime, ResDate FROM user, reservation WHERE user.UserID=reservation.UserID AND user.UserID='$suserid';";
 
 /*
 if ($search){
@@ -52,19 +51,36 @@ if ($search){
 }
  */
 
-echo $sql;
+//echo $sql; // DEBUG
+$timeArr = array("9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM",
+    "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM", "5:00 PM");
+
+
+//Show Current reservations
+$sql = "SELECT StartTime, EndTime, ResDate FROM user, reservation WHERE user.UserID=reservation.UserID AND user.UserID='$suserid' AND reservation.ResDate>=CURDATE();";
 $result = mysqli_query($conn, $sql);
 //echo $result;
-echo "<h4>Your reservations</h4>";
-echo "<table class='table table-striped'><tr><th>Book Title</th><th>List Price</th></tr>";
+echo "<h4>Your current reservations</h4>";
+echo "<table class='table table-striped'><tr><th>Start Time</th><th>End Time</th><th>Reservation Date</th></tr>";
 
 while($row = mysqli_fetch_array($result)){
-
-	echo "<tr><td>". $row["UserID"] ."</td><td>". $row["Email"]."</td></tr>";
-
+	echo "<tr><td>". $timeArr[$row["StartTime"]] ."</td><td>". $timeArr[$row["EndTime"]]."</td><td>". $row["ResDate"]."</td></tr>";
 }
-
 echo "</table>";
+
+
+//Show Past Reservations
+$sql = "SELECT StartTime, EndTime, ResDate FROM user, reservation WHERE user.UserID=reservation.UserID AND user.UserID='$suserid' AND reservation.ResDate<CURDATE();";
+$result = mysqli_query($conn, $sql);
+//echo $result;
+echo "<h4>Your past reservations</h4>";
+echo "<table class='table table-striped'><tr><th>Start Time</th><th>End Time</th><th>Reservation Date</th></tr>";
+
+while($row = mysqli_fetch_array($result)){
+	echo "<tr><td>". $timeArr[$row["StartTime"]] ."</td><td>". $timeArr[$row["EndTime"]]."</td><td>". $row["ResDate"]."</td></tr>";
+}
+echo "</table>";
+
 //echo "<p><a href=logout.php>Logout</a></p>";
 mysqli_close();
 session_write_close();
