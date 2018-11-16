@@ -1,4 +1,8 @@
 
+CREATE DATABASE meeting;
+
+USE meeting;
+
 CREATE TABLE IF NOT EXISTS `room` (
     `RoomID` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `Name` tinytext NOT NULL,
