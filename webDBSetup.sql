@@ -1,11 +1,9 @@
 
-
-
-
 CREATE TABLE IF NOT EXISTS `room` (
     `RoomID` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `Name` tinytext NOT NULL,
-    `Occupancy` int NOT NULL
+    `Occupancy` int NOT NULL,
+    `Deleted` bool NOT NULL DEFAULT FALSE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -60,6 +58,10 @@ INSERT INTO `room` (`Name`, `Occupancy`) VALUES
 	('RoomC', 75),
 	('RoomD', 100);
 
+
+INSERT INTO `room` (`Name`, `Occupancy`, `Deleted`) VALUES
+	('Chamber of Secrets', 1, TRUE);
+
 INSERT INTO `user` (`Email`, `Password`) VALUES
 	('JohnDeere@tractor.com', 'iluvtractors'),
 	('JohnSmith@address.com', 'johnsmith');
@@ -67,7 +69,8 @@ INSERT INTO `user` (`Email`, `Password`) VALUES
 
 INSERT INTO `reservation` (`RoomID`, `UserID`, `StartTime`, `EndTime`, `ResDate`) VALUES
 	('1', '1', '0', '15', '2018-12-01'),
-	('2', '2', '0', '15', '2018-11-01');
+	('2', '2', '0', '15', '2018-11-01'),
+	('1', '1', '0', '15', '2017-11-01');
 
 
 INSERT INTO `feature` (`FName`) VALUES
@@ -75,7 +78,8 @@ INSERT INTO `feature` (`FName`) VALUES
 	('Butler'),
 	('Fireplace'),
 	('X-men Poster'),
-	('Whiteboard');
+	('Whiteboard'),
+	('Eraser');
 
 INSERT INTO `room_feature` (`RoomID`, `FeatureID`) VALUES
 	('1', '1'),

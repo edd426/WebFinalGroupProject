@@ -9,19 +9,23 @@
 
 //Start session
 //session_start();
-$semail = $_SESSION['Email'];
-$suserid = $_SESSION['UserID'];
+$admin = $_SESSION['Admin']; // check this
+//$semail = $_SESSION['Email'];
+//$suserid = $_SESSION['UserID'];
 if(!isset($_SESSION['username'])) {
     echo "<p>session not set</p>";
     var_dump($_SESSION);
+    $admin = true;
     //header("location: login.html");
-    $semail = 'JohnSmith@address.com';
-    $suserid = 1;
+    //$semail = 'JohnSmith@address.com';
+    //$suserid = 1;
 }
 
-echo "<h1>Welcome $semail</h1>";
+if (!$admin){
+    header('http://localhost:81/WebFinalGroupProject/index.php'); // check this
+}
 
-
+echo "<h1>Add/Update A Room</h1>";
 
 $dbuser = 'root';
 $dbpass = 'root';
@@ -43,6 +47,13 @@ if (!$conn){
 	exit;
 }
 
+
+if(isset($_GET['roomid'])){
+    $roomUp=$_GET['roomid'];
+    $sql = "SELECT * FROM room WHERE ReomID=$roomUp;";
+    $result = mysqli_query($conn, $sql);
+}
+echo "<>"
 
 $deleteRes = $_GET["deleteRes"];
 if ($deleteRes){
