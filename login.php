@@ -1,34 +1,34 @@
 <?php 
 
-$name = $_POST["name"]; 
+$email = $_POST["name"]; 
 $password = $_POST["password"];
 
-if(empty($name) || empty($password))
+if(empty($email) || empty($password))
 {
     header('Location: login.html');
 }
-elseif(!validate($name, $password))
+elseif(!validate($email, $password))
 {
     mysqli_close();
+    echo "Failure to Login";
     header('Location: login.html');
 }
 else
 {
-    setcookie('Name', $name);
+    setcookie('Email', $email);
     echo "Success!";
     session_start();
-    $_SESSION['username'] = $name;
+    $_SESSION['Email'] = $email;
     mysqli_close();
-    header('Location: books.php');
+    header('Location: home.php');
 }
 
 
-function validate($un, $pass)
+function validate($em, $pass)
 {
-    echo "2";
     $user = 'root';
     $pw = 'root';
-    $db = 'bookstore';
+    $db = 'Meeting';
     $host = 'localhost';
     $port = 8889;
 
@@ -47,15 +47,25 @@ function validate($un, $pass)
 	    exit;
 
     }
-    $sql = "SELECT * FROM User";
+    $sql = "SELECT * FROM user  WHERE Email LIKE '%$em%' ";
     $result = mysqli_query($conn, $sql);
-    while($row = mysqli_fetch_array($result))
+
+    if(mysqli_num_rows($result) == 0)
     {
-        if($un == $row["UserName"] && $pass == $row["Password"])
-            return 1;
-    
+        return 0;
     }
-    return 0;
+    else
+    {
+        $row = mysqli_fetch_array($result);
+        if (password_verify($pass, $row["Password"])) 
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
 }
 
 ?>
