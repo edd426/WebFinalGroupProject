@@ -1,35 +1,32 @@
+<?php
+//Start session
+session_start();
+if(!isset($_SESSION['userid'])) {
+    echo "<p>session not set</p>";
+    var_dump($_SESSION);
+    header("Location: login.html");
+}
+
+if (!isset($_SESSION['admin'])){
+    header("Location: home.php"); // check this
+}
+
+?>
+
 <html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="signup.css" type="text/css" rel="stylesheet">
+    <script src="jquery-3.3.1.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 
-<?
-
-//Start session
-//session_start();
-$admin = $_SESSION['Admin']; // check this
-//$semail = $_SESSION['Email'];
-//$suserid = $_SESSION['UserID'];
-if(!isset($_SESSION['username'])) {
-    echo "<p>session not set</p>";
-    var_dump($_SESSION);
-    $admin = true;
-    //header("location: login.html");
-    //$semail = 'JohnSmith@address.com';
-    //$suserid = 1;
-}
-
-if (!$admin){
-    header('http://localhost:81/WebFinalGroupProject/index.php'); // check this
-}
-
-echo "<h1>Add/Update A Room</h1>";
+<?php
 
 $dbuser = 'root';
 $dbpass = 'root';
-$db = 'test';
+$db = 'meeting';
 $host = 'localhost';
 $port = 3306;
 
@@ -47,82 +44,155 @@ if (!$conn){
 	exit;
 }
 
+$roomname='';
+$occupancy='';
+$roomid='';
+$roomfeatureids = array();
+$roomfeaturenames = array();
 
+//if roomid is set, this might be an update page
 if(isset($_GET['roomid'])){
-    $roomUp=$_GET['roomid'];
-    $sql = "SELECT * FROM room WHERE ReomID=$roomUp;";
+    $roomid=$_GET['roomid'];
+    $sql = "SELECT * FROM room WHERE RoomID=$roomid;";
     $result = mysqli_query($conn, $sql);
-}
-echo "<>"
 
-$deleteRes = $_GET["deleteRes"];
-if ($deleteRes){
-    $sql = "DELETE FROM reservation WHERE ResID=$deleteRes;";
+    // if RoomID doesn't exist, redirect to home page
+    if(mysqli_num_rows($result)==0){ 
+        header("location: home.php");
+    }
+    // Get Name and occupancy
+    $row = mysqli_fetch_array($result);
+    $roomname=$row['Name'];
+    $occupancy=$row['Occupancy'];
+
+    // Get List of room Feature ID's
+    $sql = "SELECT FeatureID FROM room_feature WHERE RoomID=$roomid;";
     $result = mysqli_query($conn, $sql);
+    while($row = mysqli_fetch_array($result))
+        $roomfeatureids[] = $row['FeatureID'];
 }
 
-//echo $sql; // DEBUG
-$timeArr = array("9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM",
-    "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM", "5:00 PM");
-
-
-//Show Current reservations
-$sql = "SELECT ResID, StartTime, EndTime, ResDate, room.Name ".
-    "FROM user, reservation, room ".
-    "WHERE user.UserID=reservation.UserID AND user.UserID='$suserid' ".
-    "AND reservation.roomID=room.RoomID AND reservation.ResDate>=CURDATE() ".
-    "AND NOT room.Deleted;";
+// Get list of all room features names!
+$sql = "SELECT * FROM feature;";
 $result = mysqli_query($conn, $sql);
-//echo $result;
-echo "<h4>Your current reservations</h4>";
-echo "<table class='table table-striped'><tr><th>Start Time</th><th>End Time</th><th>Reservation Date</th><th>Room Name</th><th></th></tr>";
+while($row = mysqli_fetch_array($result))
+    $roomfeaturenames[$row['FeatureID']] = $row['FName'];
 
-while($row = mysqli_fetch_array($result)){
-    echo "<tr><td>". $timeArr[$row["StartTime"]] ."</td><td>". 
-        $timeArr[$row["EndTime"]]."</td><td>". $row["ResDate"].
-        "</td><td>". $row["Name"].
-        "</td><td><a href='http://localhost:81/WebFinalGroupProject/".
-        "user.php?deleteRes=".$row["ResID"]."'>Delete</a></td></tr>";
-}
-echo "</table>";
-
-
-//Show Past Reservations
-$sql = "SELECT StartTime, EndTime, ResDate, room.Name ".
-    "FROM user, reservation, room ".
-    "WHERE user.UserID=reservation.UserID AND user.UserID='$suserid' ".
-    "AND reservation.roomID=room.RoomID AND reservation.ResDate<CURDATE();";
-$result = mysqli_query($conn, $sql);
-//echo $result;
-echo "<h4>Your past reservations</h4>";
-echo "<table class='table table-striped'><tr><th>Start Time</th><th>End Time</th><th>Reservation Date</th></tr>";
-
-while($row = mysqli_fetch_array($result)){
-	echo "<tr><td>". $timeArr[$row["StartTime"]] ."</td><td>". $timeArr[$row["EndTime"]]."</td><td>". $row["ResDate"]."</td><td>". $row["Name"]."</td></tr>";
-}
-echo "</table>";
-
-
-//Show Favorite Reservations
-$sql = "SELECT room.Name FROM user, favorite, room ".
-    "WHERE user.UserID=favorite.UserID AND user.UserID='$suserid' ".
-    "AND room.RoomID=favorite.RoomID AND NOT room.Deleted;";
-$result = mysqli_query($conn, $sql);
-//echo $result;
-echo "<h4>Your favorite rooms</h4>";
-echo "<table class='table table-striped'><tr><th>Room Name</th><th></th></tr>";
-
-while($row = mysqli_fetch_array($result)){
-	echo "<tr><td>". $row["Name"] ."</td><td><a href=''>Reserve</a></td></tr>";
-}
-echo "</table>";
-
-
-//echo "<p><a href=logout.php>Logout</a></p>";
-mysqli_close();
-session_write_close();
-
+// insert the form below
 ?>
+    <h3>Add/Update A Room</h3>
+    <form action='' method='POST' enctype='multipart/form-data'>
+        <div class="form-row">
+            <div class="col-4">
+                Room Name
+                <input type="text" class ="form-control" id="RoomName" name="roomname" placeholder="Room Name" value="<?php echo $roomname; ?>" novalidate> 
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-4">
+                Room Occupancy
+                <input type="text" class="form-control" id="Occupancy" name="roomoccupancy" value="<?php echo $occupancy; ?>"  placeholder="Occupancy">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-4">
+            Features
+            <?php
+            for ($i=0; $i<10; $i++){
+                $myfeature = ($i < count($roomfeatureids)) ? $roomfeaturenames[$roomfeatureids[$i]] : '';
+                echo "<input type='text' class='form-control' name='id[$i]' value='$myfeature'  placeholder='Feature'>";
+            }
+            ?>
+            </div>
+        </div>
 
+        <div class="form-row">
+            <div class="col-4">
+                Room Picture
+                <input type='file' name='userFile'><br>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-4">
+                <button type="submit" class="btn btn-primary" value='upload'>Submit</button>
+                </br>
+            </div>
+        </div>
+    </form>
 </body>
 </html>
+
+<?php
+// Get info from form
+//
+// Get the image
+$info = pathinfo($_FILES['userFile']['name']);
+$ext = $info['extension']; // get the extension of the file
+
+// Get the room info
+$newname = $_POST['roomname'];
+$newoccupancy = $_POST['roomoccupancy'];
+$newfeatures = $_POST['id'];
+
+// If not empty, continue on to update
+
+if($newname!='' && $newoccupancy!='' && is_uploaded_file($_FILES['userFile']['tmp_name'])){
+
+    // Insert features that aren't in database
+    $sql = "INSERT INTO feature (FName) VALUES ";
+    foreach($newfeatures as $mynewf){
+        if($mynewf != '' && !in_array($mynewf, $roomfeaturenames))
+            $sql.="('$mynewf'), ";
+    }
+    $sql=substr($sql, 0, strlen($sql)-2).";";
+    $result = mysqli_query($conn, $sql);
+    
+    // Refresh list of all room features names!
+    $sql = "SELECT * FROM feature;";
+    $result = mysqli_query($conn, $sql);
+    while($row = mysqli_fetch_array($result))
+        $roomfeaturenames[$row['FeatureID']] = $row['FName'];
+
+    //Either update or add a new room
+    if(isset($_GET['roomid'])){
+        // Update existing room
+        $sql = "UPDATE room SET Name='$newname', Occupancy='$newoccupancy' VALUES WHERE room.RoomID='$roomid';";
+        $result = mysqli_query($conn, $sql);
+
+        $newimg = $_GET['roomid'].".".$ext;
+    }else{
+        // Insert new room
+        $sql = "INSERT INTO room (Name, Occupancy) VALUES ('$newname', '$newoccupancy');";
+        $result = mysqli_query($conn, $sql);
+        // Get new roomid
+        $sql = "SELECT room.RoomID FROM room WHERE room.Name='$newname';";
+        $result = mysqli_query($conn, $sql);
+        $row = mysqli_fetch_array($result);
+        $roomid = $row['RoomID'];
+
+        // Name picture
+        $newimg = $row['RoomID'].".".$ext;
+        }
+
+    // Attach features to new room
+    $sql = "INSERT INTO room_feature (RoomID, FeatureID) VALUES ";
+    foreach($newfeatures as $mynewf){
+        if($mynewf != '' && !in_array(array_search($mynewf, $roomfeaturenames), $roomfeatureids) ){
+            $mynewfid = array_search($mynewf, $roomfeaturenames);
+            $sql.="('$roomid', '$mynewfid'), ";
+        }
+    }
+    $sql=substr($sql, 0, strlen($sql)-2).";";
+    $result = mysqli_query($conn, $sql);
+
+    // Save uploaded image to Images/ folder w/ roomid as name.
+    $imagepath = "Images/".$newimg;
+    move_uploaded_file( $_FILES['userFile']['tmp_name'], $imagepath);
+
+    mysqli_close();
+    header("location: home.php");
+}
+
+mysqli_close();
+?>
+

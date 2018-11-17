@@ -7,12 +7,19 @@
 <body>
 
 <?php
+//Start session
+session_start();
+if(!isset($_SESSION['userid'])) {
+    echo "<p>session not set</p>";
+    var_dump($_SESSION);
+    header("location: login.html");
+}
 
 $user = 'root';
 $password = 'root';
-$db = 'Meeting';
+$db = 'meeting';
 $host = 'localhost';
-$port = 8889;
+$port = 3306;
 
 $conn = mysqli_connect(
    $host, 
@@ -30,7 +37,7 @@ if (!$conn){
 
 }
 
-$sql = "SELECT * FROM room";
+$sql = "SELECT * FROM room WHERE Deleted=FALSE;";
 
 $result = mysqli_query($conn, $sql);
 
@@ -40,12 +47,12 @@ while($row = mysqli_fetch_array($result))
             <div class='panel-heading'>".$row["Name"]."</div>
             <div class='panel-body'><img src='Images/".$row["RoomID"].".jpg' alt='Room".$row["RoomID"]."' width='200'><div>Occupancy: ".$row["Occupancy"]."</br>Features:</br><ul>";
     
-    $sql = "SELECT * FROM room_feature WHERE RoomID LIKE ".$row["RoomID"]."";
+    $sql = "SELECT * FROM room_feature WHERE RoomID LIKE ".$row["RoomID"].";";
     $result1 = mysqli_query($conn, $sql);
 
     while($row1 = mysqli_fetch_array($result1))
     {
-        $sql = "SELECT * FROM feature WHERE FeatureID LIKE ". $row1["FeatureID"];
+        $sql = "SELECT * FROM feature WHERE FeatureID LIKE ". $row1["FeatureID"].";";
         $result2 = mysqli_query($conn, $sql);
         while($row2 = mysqli_fetch_array($result2))
         {

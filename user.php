@@ -8,24 +8,21 @@
 <?
 
 //Start session
-//session_start();
-$semail = $_SESSION['Email'];
-$suserid = $_SESSION['UserID'];
-if(!isset($_SESSION['username'])) {
+session_start();
+if(!isset($_SESSION['userid'])) {
     echo "<p>session not set</p>";
     var_dump($_SESSION);
-    //header("location: login.html");
-    $semail = 'JohnSmith@address.com';
-    $suserid = 1;
+    header("location: login.html");
 }
+$suserid = $_SESSION['userid'];
 
-echo "<h1>Welcome $semail</h1>";
+echo "<h3>Your Reservations</h3><br>";
 
 
 
 $dbuser = 'root';
 $dbpass = 'root';
-$db = 'test';
+$db = 'meeting';
 $host = 'localhost';
 $port = 3306;
 
@@ -84,16 +81,17 @@ $sql = "SELECT StartTime, EndTime, ResDate, room.Name ".
 $result = mysqli_query($conn, $sql);
 //echo $result;
 echo "<h4>Your past reservations</h4>";
-echo "<table class='table table-striped'><tr><th>Start Time</th><th>End Time</th><th>Reservation Date</th></tr>";
+echo "<table class='table table-striped'><tr><th>Room Name</th><th>Start Time</th><th>End Time</th><th>Reservation Date</th></tr>";
 
 while($row = mysqli_fetch_array($result)){
-	echo "<tr><td>". $timeArr[$row["StartTime"]] ."</td><td>". $timeArr[$row["EndTime"]]."</td><td>". $row["ResDate"]."</td><td>". $row["Name"]."</td></tr>";
+    echo "<tr><td>". $row["Name"]."</td><td>". $timeArr[$row["StartTime"]] ."</td><td>". 
+        $timeArr[$row["EndTime"]]."</td><td>".$row["ResDate"]."</td></tr>";
 }
 echo "</table>";
 
 
 //Show Favorite Reservations
-$sql = "SELECT room.Name FROM user, favorite, room ".
+$sql = "SELECT room.RoomID, room.Name FROM user, favorite, room ".
     "WHERE user.UserID=favorite.UserID AND user.UserID='$suserid' ".
     "AND room.RoomID=favorite.RoomID AND NOT room.Deleted;";
 $result = mysqli_query($conn, $sql);
@@ -102,14 +100,15 @@ echo "<h4>Your favorite rooms</h4>";
 echo "<table class='table table-striped'><tr><th>Room Name</th><th></th></tr>";
 
 while($row = mysqli_fetch_array($result)){
-	echo "<tr><td>". $row["Name"] ."</td><td><a href=''>Reserve</a></td></tr>";
+    echo "<tr><td>". $row["Name"] ."</td><td><a href='ReserveRoom.php?roomid=".
+        $row["RoomID"]."'>Reserve</a></td></tr>";
 }
 echo "</table>";
 
 
 //echo "<p><a href=logout.php>Logout</a></p>";
 mysqli_close();
-session_write_close();
+//session_write_close();
 
 ?>
 
