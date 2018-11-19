@@ -7,7 +7,7 @@ if(!isset($_SESSION['userid'])) {
     header("Location: login.html");
 }
 
-if (!isset($_SESSION['admin'])){
+if (!$_SESSION['admin']){
     header("Location: home.php"); // check this
 }
 
@@ -156,10 +156,11 @@ if($newname!='' && $newoccupancy!='' && is_uploaded_file($_FILES['userFile']['tm
     //Either update or add a new room
     if(isset($_GET['roomid'])){
         // Update existing room
-        $sql = "UPDATE room SET Name='$newname', Occupancy='$newoccupancy' VALUES WHERE room.RoomID='$roomid';";
+        $sql = "UPDATE room SET Name='$newname', Occupancy='$newoccupancy' WHERE room.RoomID='$roomid';";
         $result = mysqli_query($conn, $sql);
+        echo $sql;
 
-        $newimg = $_GET['roomid'].".".$ext;
+        $newimg = $roomid.".".$ext;
     }else{
         // Insert new room
         $sql = "INSERT INTO room (Name, Occupancy) VALUES ('$newname', '$newoccupancy');";

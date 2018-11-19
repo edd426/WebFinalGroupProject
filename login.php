@@ -36,12 +36,9 @@ elseif(!validate($email, $password))
 }
 else
 {
-    //setcookie('Email', $email);
-    //echo "Success!";
     session_start();
-    //$_SESSION['email'] = $email;
     //Store userid in $_SESSION
-    $sql = "SELECT user.UserID FROM user WHERE user.Email LIKE '%$em%';";
+    $sql = "SELECT user.UserID FROM user WHERE user.Email='$email';";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
     $_SESSION['userid'] = $row['UserID'];

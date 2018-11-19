@@ -15,6 +15,7 @@ if(!isset($_SESSION['userid'])) {
     header("location: login.html");
 }
 
+
 $user = 'root';
 $password = 'root';
 $db = 'meeting';
@@ -37,7 +38,45 @@ if (!$conn){
 
 }
 
-$sql = "SELECT * FROM room WHERE Deleted=FALSE;";
+//Pagination Code below
+//Control number of pages w/ rec_limit
+$rec_limit = 6;
+
+/* Get total number of records */
+$sql = "SELECT count(RoomID) FROM room WHERE Deleted=FALSE;";
+$retval = mysqli_query($conn, $sql);
+
+
+if(! $retval ) {
+    die('Could not get data: ' . mysql_error());
+}
+$row = mysqli_fetch_array($retval);
+$rec_count = $row[0];
+
+if( isset($_GET{'page'} ) ) {
+    $page = $_GET{'page'} + 1;
+    $offset = $rec_limit * $page ;
+}else {
+    $page = 0;
+    $offset = 0;
+}
+
+$left_rec = $rec_count - ($page * $rec_limit);
+
+// Post pagination
+if( $page > 0 ) {
+    $last = $page - 2;
+    echo "<a href = \"$_PHP_SELF?page=$last\">Last $rec_limit Records</a> |";
+    echo "<a href = \"$_PHP_SELF?page=$page\">Next $rec_limit Records</a>";
+}else if( $page == 0 ) {
+    echo "<a href = \"$_PHP_SELF?page=$page\">Next $rec_limit Records</a>";
+}else if( $left_rec < $rec_limit ) {
+    $last = $page - 2;
+    echo "<a href = \"$_PHP_SELF?page=$last\">Last $rec_limit Records</a>";
+}
+
+
+$sql = "SELECT * FROM room WHERE Deleted=FALSE LIMIT $offset, $rec_limit;";
 
 $result = mysqli_query($conn, $sql);
 
@@ -62,10 +101,25 @@ while($row = mysqli_fetch_array($result))
             
             
     echo "</ul></br>
-    <a href = 'ReserveRoom.php/?roomid=".$row["RoomID"]."'>Reserve This Room</a></div></div>
-    </div>";
+    <a href = 'ReserveRoom.php?roomid=".$row["RoomID"]."'>Reserve This Room</a><br>";
+    if($_SESSION['admin']==TRUE){
+        echo "<a href = 'room.php?roomid=".$row["RoomID"]."'>Update This Room</a><br>";
+        echo "<a href = 'delete.php?roomid=".$row["RoomID"]."'>Delete This Room</a>";
+    }
+    echo "</div></div></div>";
 }
 
+// Pagination again
+if( $page > 0 ) {
+    $last = $page - 2;
+    echo "<a href = \"$_PHP_SELF?page=$last\">Last $rec_limit Records</a> |";
+    echo "<a href = \"$_PHP_SELF?page=$page\">Next $rec_limit Records</a>";
+}else if( $page == 0 ) {
+    echo "<a href = \"$_PHP_SELF?page=$page\">Next $rec_limit Records</a>";
+}else if( $left_rec < $rec_limit ) {
+    $last = $page - 2;
+    echo "<a href = \"$_PHP_SELF?page=$last\">Last $rec_limit Records</a>";
+}
 
 ?>
 
