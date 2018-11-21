@@ -1,0 +1,19 @@
+td.reserved
+{
+    background-color: red;
+}
+
+td.available
+{
+    background-color: green;
+}
+
+td.selected
+{
+    background-color: gold;
+}
+
+th
+{
+    text-align: left;
+}
