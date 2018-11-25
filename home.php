@@ -1,11 +1,3 @@
-<html lang="en">
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link href="home.css" type="text/css" rel="stylesheet">
-</head>
-<body>
-
 <?php
 //Start session
 session_start();
@@ -15,6 +7,15 @@ if(!isset($_SESSION['userid'])) {
     header("location: login.html");
 }
 
+$page = $_GET["page"];
+$features = $_GET["features"];
+$roomSize = $_GET["roomSize"];
+$search = $_GET["search"];
+
+if(empty($page))
+{
+    $page=0;
+}
 
 $user = 'root';
 $password = 'root';
@@ -37,13 +38,12 @@ if (!$conn){
 	exit;
 
 }
+//Control number of pages w/ room_limit
+$room_limit = 5;
 
-//Pagination Code below
-//Control number of pages w/ rec_limit
-$rec_limit = 6;
+/* Get total number of rooms */
+$sql = "SELECT count(RoomID) FROM room WHERE Deleted=FALSE";
 
-/* Get total number of records */
-$sql = "SELECT count(RoomID) FROM room WHERE Deleted=FALSE;";
 $retval = mysqli_query($conn, $sql);
 
 
@@ -51,77 +51,203 @@ if(! $retval ) {
     die('Could not get data: ' . mysql_error());
 }
 $row = mysqli_fetch_array($retval);
-$rec_count = $row[0];
+$room_count = $row[0];
+   
 
-if( isset($_GET{'page'} ) ) {
-    $page = $_GET{'page'} + 1;
-    $offset = $rec_limit * $page ;
-}else {
-    $page = 0;
-    $offset = 0;
+$room_ids1 = array();
+$sql = "SELECT * FROM room WHERE Deleted=FALSE";
+
+if(!empty($roomSize))
+{
+    switch($roomSize)
+    {
+        case 1:
+            $sql = $sql." AND Occupancy < 5";
+            break;
+        case 2:
+            $sql = $sql." AND Occupancy BETWEEN 5 AND 10";
+            break;
+        case 3:
+            $sql = $sql." AND Occupancy BETWEEN 11 AND 20";
+            break;
+        case 4:
+            $sql = $sql." AND Occupancy > 20";
+            break;
+    }
 }
-
-$left_rec = $rec_count - ($page * $rec_limit);
-
-// Post pagination
-if( $page > 0 ) {
-    $last = $page - 2;
-    echo "<a href = \"$_PHP_SELF?page=$last\">Last $rec_limit Records</a> |";
-    echo "<a href = \"$_PHP_SELF?page=$page\">Next $rec_limit Records</a>";
-}else if( $page == 0 ) {
-    echo "<a href = \"$_PHP_SELF?page=$page\">Next $rec_limit Records</a>";
-}else if( $left_rec < $rec_limit ) {
-    $last = $page - 2;
-    echo "<a href = \"$_PHP_SELF?page=$last\">Last $rec_limit Records</a>";
-}
-
-
-$sql = "SELECT * FROM room WHERE Deleted=FALSE LIMIT $offset, $rec_limit;";
 
 $result = mysqli_query($conn, $sql);
 
 while($row = mysqli_fetch_array($result))
 {
-    echo "<div class='panel panel-default'>
-            <div class='panel-heading'>".$row["Name"]."</div>
-            <div class='panel-body'><img src='Images/".$row["RoomID"].".jpg' alt='Room".$row["RoomID"]."' width='200'><div>Occupancy: ".$row["Occupancy"]."</br>Features:</br><ul>";
-    
-    $sql = "SELECT * FROM room_feature WHERE RoomID LIKE ".$row["RoomID"].";";
-    $result1 = mysqli_query($conn, $sql);
+    array_push($room_ids1, $row["RoomID"]);
+}
 
-    while($row1 = mysqli_fetch_array($result1))
+if(!empty($features[0]))
+{
+    $room_ids2 = array();
+    $sql = "SELECT * FROM room_feature WHERE FeatureID=".$features[0];
+    $result = mysqli_query($conn, $sql);
+    while($row = mysqli_fetch_array($result))
     {
-        $sql = "SELECT * FROM feature WHERE FeatureID LIKE ". $row1["FeatureID"].";";
-        $result2 = mysqli_query($conn, $sql);
-        while($row2 = mysqli_fetch_array($result2))
-        {
-            echo "<li>".$row2["FName"]."</li>";
-        }
-    }            
-            
-            
-    echo "</ul></br>
-    <a href = 'ReserveRoom.php?roomid=".$row["RoomID"]."'>Reserve This Room</a><br>";
-    if($_SESSION['admin']==TRUE){
-        echo "<a href = 'room.php?roomid=".$row["RoomID"]."'>Update This Room</a><br>";
-        echo "<a href = 'delete.php?roomid=".$row["RoomID"]."'>Delete This Room</a>";
+        array_push($room_ids2, $row["RoomID"]);
     }
-    echo "</div></div></div>";
+    for($i = 1; $i < count($features); $i++)
+    {
+        $temp = array();
+        $sql = "SELECT * FROM room_feature WHERE FeatureID=".$features[$i];
+        $result = mysqli_query($conn, $sql);
+        while($row = mysqli_fetch_array($result))
+        {
+            array_push($temp, $row["RoomID"]);
+        }
+        $room_ids2 = array_intersect($room_ids2, $temp);
+    }
+    $room_ids1 = array_intersect($room_ids1, $room_ids2);
 }
 
-// Pagination again
-if( $page > 0 ) {
-    $last = $page - 2;
-    echo "<a href = \"$_PHP_SELF?page=$last\">Last $rec_limit Records</a> |";
-    echo "<a href = \"$_PHP_SELF?page=$page\">Next $rec_limit Records</a>";
-}else if( $page == 0 ) {
-    echo "<a href = \"$_PHP_SELF?page=$page\">Next $rec_limit Records</a>";
-}else if( $left_rec < $rec_limit ) {
-    $last = $page - 2;
-    echo "<a href = \"$_PHP_SELF?page=$last\">Last $rec_limit Records</a>";
+if(!empty($search))
+{
+    //Search room names
+    $room_ids3 = array();
+    $sql = "SELECT * FROM room WHERE Name LIKE '%".$search."%'";
+    $result = mysqli_query($conn, $sql);
+    while($row = mysqli_fetch_array($result))
+    {
+        array_push($room_ids3, $row["RoomID"]);
+    }
+
+    //Search feature names
+    $room_ids4 = array();
+    $feature_ids = array();
+    $sql = "SELECT * FROM feature WHERE FName LIKE '%".$search."%'";
+    $result = mysqli_query($conn, $sql);
+    while($row = mysqli_fetch_array($result))
+    {
+        array_push($feature_ids, $row["FeatureID"]);
+    }
+    print_r($feature_ids);
+    foreach($feature_ids as $id)
+    {
+        $sql = "SELECT * FROM room_feature WHERE FeatureID='".$id."'";
+        $result = mysqli_query($conn, $sql);
+        while($row = mysqli_fetch_array($result))
+        {
+            array_push($room_ids4, $row["RoomID"]);
+        }
+
+    }
+    $room_ids4 = array_unique(array_merge($room_ids3, $room_ids4));
+    $room_ids1 = array_intersect($room_ids1, $room_ids4);
 }
 
+
+$start = $page * $room_limit;
+$end = $start + $room_limit - 1;
+$count = 0;
+
+foreach ($room_ids1 as $value)
+{
+    if($count >= $start and $count <= $end)
+    {
+        $sql = "SELECT * FROM room WHERE RoomID LIKE ". $value;
+        $result = mysqli_query($conn, $sql);
+        $row = mysqli_fetch_array($result);
+        echo "<div class='card'>
+                <div class='card-header'>".$row["Name"]."</div>
+                <div class='card-body'><img src='Images/".$row["RoomID"].".jpg' alt='Room".$row["RoomID"]."' width='300'><div>Occupancy: ".$row["Occupancy"]."</br>Features:</br><ul>";
+    
+        $sql = "SELECT * FROM room_feature WHERE RoomID LIKE ".$row["RoomID"].";";
+        $result1 = mysqli_query($conn, $sql);
+
+        while($row1 = mysqli_fetch_array($result1))
+        {
+            $sql = "SELECT * FROM feature WHERE FeatureID LIKE ". $row1["FeatureID"].";";
+            $result2 = mysqli_query($conn, $sql);
+            while($row2 = mysqli_fetch_array($result2))
+            {
+                echo "<li>".$row2["FName"]."</li>";
+            }
+        }            
+            
+            
+        echo "</ul></br>
+        <a href = 'ReserveRoom.php?roomid=".$row["RoomID"]."'>Reserve This Room</a><br>";
+        if($_SESSION['admin']==TRUE){
+            echo "<a href = 'room.php?roomid=".$row["RoomID"]."'>Update This Room</a><br>";
+            echo "<a href = 'delete.php?roomid=".$row["RoomID"]."'>Delete This Room</a>";
+        }
+        echo "</div></div></div>";
+    }   
+    $count++;
+}
+
+$page_count = ceil(sizeof($room_ids1)/$room_limit);
+//echo $page_count;
+echo "<nav aria-label='Page navigation example'>
+                    <ul class='pagination'>
+                        <li class='page-item";
+if($page == 0)
+{
+    echo " disabled";
+}
+                        echo "'>
+                            <a class='page-link' href='";
+if($page>0)
+{
+    $url = $_SERVER['REQUEST_URI'];     
+    if(strpos($url, "&page=") !== false)
+    {
+        $url = explode("&page=", $url)[0];
+    }     
+    $url = "home.html?".explode("?", $url)[1]."&page=".($page-1);
+    echo $url;
+} 
+echo "' aria-label='Previous'>
+        <span aria-hidden='true'>&laquo;</span>
+        <span class='sr-only'>Previous</span>
+         </a>
+        </li>";
+for($j = 0; $j < $page_count; $j++)
+{
+    echo "<li class='page-item'><a class='page-link' href='";
+    $url = $_SERVER['REQUEST_URI'];
+    if(strpos($url, "&page=") !== false)
+    {
+        $url = explode("&page=", $url)[0];
+    }
+    $url = "home.html?".explode("?", $url)[1]."&page=".$j;
+    echo $url;
+    echo "'>";
+    echo $j+1;
+    echo "</a></li>";
+}
+
+echo "<li class='page-item";
+
+if($page == $page_count-1)
+{
+    echo " disabled";
+}
+
+echo "'>
+        <a class='page-link' href='";
+
+if($page<$page_count-1)
+{
+    $url = $_SERVER['REQUEST_URI'];     
+    if(strpos($url, "&page=") !== false)
+    {
+        $url = explode("&page=", $url)[0];
+    }     
+    $url = "home.html?".explode("?", $url)[1]."&page=".($page+1);
+    echo $url;
+} 
+        echo"' aria-label='Next'>
+            <span aria-hidden='true'>&raquo;</span>
+            <span class='sr-only'>Next</span>
+        </a>
+        </li>
+        </ul>
+        </nav>";
 ?>
-
-</body>
-</html>

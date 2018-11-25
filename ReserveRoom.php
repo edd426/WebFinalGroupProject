@@ -1,9 +1,12 @@
+<?php
+session_start();
+?>
 <html lang="en">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
-  <link href="../home.css" type="text/css" rel="stylesheet"></link>
-  <link href="../reserveRoom.css" type="text/css" rel="stylesheet"></link>
+  <link href="home.css" type="text/css" rel="stylesheet"></link>
+  <link href="reserveRoom.css" type="text/css" rel="stylesheet"></link>
   <script type="text/javascript" src="/FinalProject/jquery-3.3.1.js"></script>
   <script type="text/javascript" src="/FinalProject/ReserveRoom.js"></script>
 </head>

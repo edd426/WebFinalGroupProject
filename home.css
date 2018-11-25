@@ -7,3 +7,36 @@ img
 ul {
     margin-left: 200px;
   }
+
+.col-2
+{
+    background-color: #67AFCB;
+    /* height: auto; */
+    height: auto;
+    min-height: 100% !important;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 10px;
+    
+}
+
+.col-10
+{
+    background-color: #E4F1F6;
+    /* height: auto; */
+    height: auto;
+    min-height: 100% !important;
+    
+}
+
+div
+{
+    margin: 0px;
+}
+
+.card-header
+{
+    background-color: #347B98;
+    color: white;
+    font-size: 16pt;
+}
