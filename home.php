@@ -126,7 +126,7 @@ if(!empty($search))
     {
         array_push($feature_ids, $row["FeatureID"]);
     }
-    print_r($feature_ids);
+    //print_r($feature_ids);
     foreach($feature_ids as $id)
     {
         $sql = "SELECT * FROM room_feature WHERE FeatureID='".$id."'";
@@ -200,7 +200,7 @@ if($page>0)
     {
         $url = explode("&page=", $url)[0];
     }     
-    $url = "home.html?".explode("?", $url)[1]."&page=".($page-1);
+    $url = "home1.php?".explode("?", $url)[1]."&page=".($page-1);
     echo $url;
 } 
 echo "' aria-label='Previous'>
@@ -216,7 +216,7 @@ for($j = 0; $j < $page_count; $j++)
     {
         $url = explode("&page=", $url)[0];
     }
-    $url = "home.html?".explode("?", $url)[1]."&page=".$j;
+    $url = "home1.php?".explode("?", $url)[1]."&page=".$j;
     echo $url;
     echo "'>";
     echo $j+1;
@@ -240,7 +240,7 @@ if($page<$page_count-1)
     {
         $url = explode("&page=", $url)[0];
     }     
-    $url = "home.html?".explode("?", $url)[1]."&page=".($page+1);
+    $url = "home1.php?".explode("?", $url)[1]."&page=".($page+1);
     echo $url;
 } 
         echo"' aria-label='Next'>
