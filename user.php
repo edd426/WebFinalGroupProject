@@ -1,10 +1,26 @@
 <html lang="en">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="style.css" type="text/css" rel="stylesheet">
+  <script src="jquery-3.3.1.js"></script>
 </head>
 <body>
-
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1A3E4C;">
+  <a class="navbar-brand" href="#">Meeting Master</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link active" href="home1.php">Home <span class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link" href="user.php">My Page</a>
+      <a class="nav-item nav-link" href="logout.php">Logout</a>
+    </div>
+  </div>
+</nav>
+<div class='row'>
+  <div class='col'>
 <?
 
 //Start session
@@ -16,7 +32,8 @@ if(!isset($_SESSION['userid'])) {
 }
 $suserid = $_SESSION['userid'];
 
-echo "<h3>Your Reservations</h3><br>";
+echo "";
+echo "<div class='card'><div class='card-header'><h3>Your Page</h3></div></div><br>";
 
 
 
@@ -60,8 +77,8 @@ $sql = "SELECT ResID, StartTime, EndTime, ResDate, room.Name ".
     "AND NOT room.Deleted;";
 $result = mysqli_query($conn, $sql);
 //echo $result;
-echo "<h4>Your current reservations</h4>";
-echo "<table class='table table-striped'><tr><th>Start Time</th><th>End Time</th><th>Reservation Date</th><th>Room Name</th><th></th></tr>";
+echo "<div class='card'><div class='card-header'><h4>Your Current Reservations</h4></div>";
+echo "<div class='card-body'><table class='table table-striped'><tr><th>Start Time</th><th>End Time</th><th>Reservation Date</th><th>Room Name</th><th></th></tr>";
 
 while($row = mysqli_fetch_array($result)){
     echo "<tr><td>". $timeArr[$row["StartTime"]] ."</td><td>". 
@@ -70,7 +87,7 @@ while($row = mysqli_fetch_array($result)){
         "</td><td><a href='http://localhost:81/WebFinalGroupProject/".
         "user.php?deleteRes=".$row["ResID"]."'>Delete</a></td></tr>";
 }
-echo "</table>";
+echo "</table></div></div>";
 
 
 //Show Past Reservations
@@ -80,14 +97,14 @@ $sql = "SELECT StartTime, EndTime, ResDate, room.Name ".
     "AND reservation.roomID=room.RoomID AND reservation.ResDate<CURDATE();";
 $result = mysqli_query($conn, $sql);
 //echo $result;
-echo "<h4>Your past reservations</h4>";
-echo "<table class='table table-striped'><tr><th>Room Name</th><th>Start Time</th><th>End Time</th><th>Reservation Date</th></tr>";
+echo "<div class='card'><div class='card-header'><h4>Your Past Reservations</h4></div>";
+echo "<div class='card-body'><table class='table table-striped'><tr><th>Room Name</th><th>Start Time</th><th>End Time</th><th>Reservation Date</th></tr>";
 
 while($row = mysqli_fetch_array($result)){
     echo "<tr><td>". $row["Name"]."</td><td>". $timeArr[$row["StartTime"]] ."</td><td>". 
         $timeArr[$row["EndTime"]]."</td><td>".$row["ResDate"]."</td></tr>";
 }
-echo "</table>";
+echo "</table></div></div>";
 
 
 //Show Favorite Reservations
@@ -96,14 +113,15 @@ $sql = "SELECT room.RoomID, room.Name FROM user, favorite, room ".
     "AND room.RoomID=favorite.RoomID AND NOT room.Deleted;";
 $result = mysqli_query($conn, $sql);
 //echo $result;
-echo "<h4>Your favorite rooms</h4>";
-echo "<table class='table table-striped'><tr><th>Room Name</th><th></th></tr>";
+echo "<div class='card'><div class='card-header'><h4>Your Favorite Rooms</h4></div>";
+echo "<div class='card-body'><table class='table table-striped'><tr><th>Room Name</th><th>Reserve This Room</th><th>Remove From Favorites</th></tr>";
 
 while($row = mysqli_fetch_array($result)){
     echo "<tr><td>". $row["Name"] ."</td><td><a href='ReserveRoom.php?roomid=".
-        $row["RoomID"]."'>Reserve</a></td></tr>";
+        $row["RoomID"]."'>Reserve</a></td><td><a href='removefav.php?roomid=".
+        $row["RoomID"]."'>Remove</a></td></tr>";
 }
-echo "</table>";
+echo "</table></div></div>";
 
 
 //echo "<p><a href=logout.php>Logout</a></p>";
@@ -112,5 +130,7 @@ mysqli_close();
 
 ?>
 
+    </div>
+</div>
 </body>
 </html>
