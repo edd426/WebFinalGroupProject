@@ -82,7 +82,7 @@ $(document).ready(function() {
                 });
 
                 //Redirect to home page
-                window.location.href = "home.html";
+                window.location.href = "home1.php";
 
 
             }

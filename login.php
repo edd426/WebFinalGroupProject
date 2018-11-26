@@ -48,7 +48,7 @@ else
     $result = mysqli_query($conn, $sql);
     $_SESSION['admin'] = (mysqli_num_rows($result)==0) ? false : true;
     mysqli_close();
-    header('Location: home.html');
+    header('Location: home1.php');
 }
 
 

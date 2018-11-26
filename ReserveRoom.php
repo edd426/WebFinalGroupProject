@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+if(!isset($_SESSION['userid'])) {
+    echo "<p>session not set</p>";
+    var_dump($_SESSION);
+    header("location: login.html");
+}
 ?>
 <html lang="en">
 <head>
@@ -30,7 +36,6 @@ $conn = mysqli_connect(
    $port
 );
 
-
 if (!$conn){
 
 	echo "Connection failed!";
@@ -53,7 +58,7 @@ while($row = mysqli_fetch_array($result))
 <div id = "schedule">
 </div>
 <input id = "submit" class="btn btn-primary" type = "submit" value = "Save Reservation" disabled></input>
-<input type = "button" class="btn btn-danger" value = "Cancel" onClick = "window.location.href = '../home.php'"></button>
+<input type = "button" class="btn btn-danger" value = "Cancel" onClick = "window.location.href = 'home1.php'"></button>
 <p id ="errorMessage"></p>
 
 </form>
