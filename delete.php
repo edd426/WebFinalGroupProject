@@ -8,7 +8,7 @@ if(!isset($_SESSION['userid'])) {
 }
 
 if (!$_SESSION['admin']){
-    header("Location: home.php"); // check this
+    header("Location: home1.php"); // check this
 }
 
 
@@ -37,7 +37,7 @@ if(isset($_GET['roomid'])){
     $sql = "UPDATE room SET Deleted=TRUE WHERE RoomID=$roomid;";
     $result = mysqli_query($conn, $sql);
 }
-header('Location: home.php');
+header('Location: home1.php');
 
 
 ?>

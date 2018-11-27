@@ -8,7 +8,7 @@ if(!isset($_SESSION['userid'])) {
 }
 
 if (!$_SESSION['admin']){
-    header("Location: home.php"); // check this
+    header("Location: home1.php"); // check this
 }
 
 ?>
@@ -16,12 +16,30 @@ if (!$_SESSION['admin']){
 <html lang="en">
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link href="signup.css" type="text/css" rel="stylesheet">
+    <!--<link href="signup.css" type="text/css" rel="stylesheet">-->
+    <link href="style.css" type="text/css" rel="stylesheet">
     <script src="jquery-3.3.1.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1A3E4C;">
+  <a class="navbar-brand" href="#">Meeting Master</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link active" href="home1.php">Home <span class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link" href="user.php">My Page</a>
+      <a class="nav-item nav-link" href="logout.php">Logout</a>
+      <?php 
+        if($_SESSION['admin']){
+            echo "<a class='nav-item nav-link' href='room.php'>Add Room</a>";
+        }
+      ?>
+    </div>
+  </div>
+</nav>
 <?php
 
 $dbuser = 'root';
@@ -58,7 +76,7 @@ if(isset($_GET['roomid'])){
 
     // if RoomID doesn't exist, redirect to home page
     if(mysqli_num_rows($result)==0){ 
-        header("location: home.php");
+        header("location: home1.php");
     }
     // Get Name and occupancy
     $row = mysqli_fetch_array($result);
@@ -80,36 +98,69 @@ while($row = mysqli_fetch_array($result))
 
 // insert the form below
 ?>
-    <h3>Add/Update A Room</h3>
+    <div class='form-row'>
+    <div class='col-6'>
+    <div class='card'>
+    <div class='card-header'>
+        <h3>Add/Update A Room</h3>
+        <h6>Room Name, Occupancy, and Photo required.</h6>
+    </div>
+    </div>
+    </div>
+    </div>
     <form action='' method='POST' enctype='multipart/form-data'>
         <div class="form-row">
-            <div class="col-4">
-                Room Name
-                <input type="text" class ="form-control" id="RoomName" name="roomname" placeholder="Room Name" value="<?php echo $roomname; ?>" novalidate> 
+            <div class="col-6">
+                <div class='card'>
+                    <div class='card-header'>
+                        Room Name
+                    </div>
+                    <div class='card-body'>
+                        <input type="text" class ="form-control" id="RoomName" name="roomname" placeholder="Name" value="<?php echo $roomname; ?>" novalidate> 
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-row">
-            <div class="col-4">
-                Room Occupancy
-                <input type="text" class="form-control" id="Occupancy" name="roomoccupancy" value="<?php echo $occupancy; ?>"  placeholder="Occupancy">
+            <div class="col-6">
+                <div class='card'>
+                    <div class='card-header'>
+                        Room Occupancy
+                    </div>
+                    <div class='card-body'>
+                        <input type="text" class="form-control" id="Occupancy" name="roomoccupancy" value="<?php echo $occupancy; ?>"  placeholder="Occupancy">
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-row">
-            <div class="col-4">
-            Features
-            <?php
-            for ($i=0; $i<10; $i++){
-                $myfeature = ($i < count($roomfeatureids)) ? $roomfeaturenames[$roomfeatureids[$i]] : '';
-                echo "<input type='text' class='form-control' name='id[$i]' value='$myfeature'  placeholder='Feature'>";
-            }
-            ?>
+            <div class="col-6">
+                <div class='card'>
+                    <div class='card-header'>
+                        Room Features
+                    </div>
+                    <div class='card-body'>
+                        <?php
+                        for ($i=0; $i<10; $i++){
+                            $myfeature = ($i < count($roomfeatureids)) ? $roomfeaturenames[$roomfeatureids[$i]] : '';
+                            echo "<input type='text' class='form-control' name='id[$i]' value='$myfeature'  placeholder='Feature'>";
+                        }
+                        ?>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="form-row">
-            <div class="col-4">
-                Room Picture
-                <input type='file' name='userFile'><br>
+            <div class="col-6">
+                <div class='card'>
+                    <div class='card-header'>
+                        Room Photo
+                    </div>
+                    <div class='card-body'>
+                        <input type='file' name='userFile'><br>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-row">
@@ -158,7 +209,6 @@ if($newname!='' && $newoccupancy!='' && is_uploaded_file($_FILES['userFile']['tm
         // Update existing room
         $sql = "UPDATE room SET Name='$newname', Occupancy='$newoccupancy' WHERE room.RoomID='$roomid';";
         $result = mysqli_query($conn, $sql);
-        echo $sql;
 
         $newimg = $roomid.".".$ext;
     }else{
@@ -191,7 +241,7 @@ if($newname!='' && $newoccupancy!='' && is_uploaded_file($_FILES['userFile']['tm
     move_uploaded_file( $_FILES['userFile']['tmp_name'], $imagepath);
 
     mysqli_close();
-    header("location: home.php");
+    header("location: home1.php");
 }
 
 mysqli_close();

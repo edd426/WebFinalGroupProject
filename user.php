@@ -1,3 +1,14 @@
+<?php
+    //Start session
+    session_start();
+    if(!isset($_SESSION['userid'])) {
+        echo "<p>session not set</p>";
+        var_dump($_SESSION);
+        header("location: login.html");
+    }
+    $suserid = $_SESSION['userid'];
+?>
+
 <html lang="en">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,13 +27,18 @@
       <a class="nav-item nav-link active" href="home1.php">Home <span class="sr-only">(current)</span></a>
       <a class="nav-item nav-link" href="user.php">My Page</a>
       <a class="nav-item nav-link" href="logout.php">Logout</a>
+      <?php 
+        if($_SESSION['admin']){
+            echo "<a class='nav-item nav-link' href='room.php'>Add Room</a>";
+        }
+      ?>
     </div>
   </div>
 </nav>
 <div class='row'>
   <div class='col'>
-<?
 
+<?
 //Start session
 session_start();
 if(!isset($_SESSION['userid'])) {

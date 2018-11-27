@@ -85,11 +85,11 @@ INSERT INTO `reservation` (`RoomID`, `UserID`, `StartTime`, `EndTime`, `ResDate`
 
 
 INSERT INTO `feature` (`FName`) VALUES
-	('Conference Table'),
-	('TV Screen'),
-	('Hanging Lights'),
-	('Natural Light'),
-	('Whiteboard');
+	('conference table'),
+	('tv screen'),
+	('hanging lights'),
+	('natural light'),
+	('whiteboard');
 
 INSERT INTO `room_feature` (`RoomID`, `FeatureID`) VALUES
 	('1', '1'),
