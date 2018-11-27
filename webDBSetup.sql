@@ -57,41 +57,52 @@ CREATE TABLE IF NOT EXISTS `favorite` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `room` (`Name`, `Occupancy`) VALUES
-	('RoomA', 25),
-	('RoomB', 50),
-	('RoomC', 75),
-	('RoomD', 100);
-
+	('RoomA', 30),
+	('RoomB', 10),
+	('RoomC', 15),
+	('RoomD', 20),
+	('RoomE', 21),
+	('RoomF', 9),
+	('RoomG', 15),
+	('RoomH', 16),
+	('RoomI', 13),
+	('RoomJ', 12);
 
 INSERT INTO `room` (`Name`, `Occupancy`, `Deleted`) VALUES
 	('Chamber of Secrets', 1, TRUE);
 
 INSERT INTO `user` (`Email`, `Password`) VALUES
-	('JohnDeere@tractor.com', 'iluvtractors'),
-	('JohnSmith@address.com', 'johnsmith');
+	('JohnDeere@tractor.com', '$2y$10$uk3TPK7OLNsJ4tOOa6zrzu8WvE1AxajSvUoDirQle/u30HPgjQaGO'),
+	('JohnSmith@address.com', '$2y$10$uk3TPK7OLNsJ4tOOa6zrzu8WvE1AxajSvUoDirQle/u30HPgjQaGO');
         
 
 INSERT INTO `reservation` (`RoomID`, `UserID`, `StartTime`, `EndTime`, `ResDate`) VALUES
 	('1', '1', '0', '15', '2018-12-01'),
 	('2', '2', '0', '15', '2018-11-01'),
-	('1', '1', '0', '15', '2017-11-01');
+	('1', '2', '0', '15', '2017-11-01'),
+	('2', '2', '0', '15', '2016-11-01'),
+	('11', '2', '0', '15', '2016-11-01');
 
 
 INSERT INTO `feature` (`FName`) VALUES
-	('Oxygen'),
-	('Butler'),
-	('Fireplace'),
-	('X-men Poster'),
-	('Whiteboard'),
-	('Eraser');
+	('Conference Table'),
+	('TV Screen'),
+	('Hanging Lights'),
+	('Natural Light'),
+	('Whiteboard');
 
 INSERT INTO `room_feature` (`RoomID`, `FeatureID`) VALUES
 	('1', '1'),
+	('1', '5'),
 	('2', '1'),
-	('3', '1'),
-	('4', '5'),
-	('3', '5'),
-	('2', '5');
+	('2', '2'),
+	('3', '2'),
+	('3', '3'),
+	('3', '4'),
+	('4', '1'),
+	('4', '2'),
+	('4', '3'),
+	('4', '4');
 
 INSERT INTO `admin` (`UserID`) VALUES
 	('1'),

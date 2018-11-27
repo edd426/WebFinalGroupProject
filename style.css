@@ -1,0 +1,22 @@
+
+
+.col
+{
+    background-color: #E4F1F6;
+    /* height: auto; */
+    height: auto;
+    min-height: 100% !important;
+    
+}
+
+div
+{
+    margin: 0px;
+}
+
+.card-header
+{
+    background-color: #347B98;
+    color: white;
+    font-size: 16pt;
+}

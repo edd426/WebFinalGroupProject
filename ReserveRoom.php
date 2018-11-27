@@ -26,7 +26,7 @@ $user = 'root';
 $password = 'root';
 $db = 'Meeting';
 $host = 'localhost';
-$port = 8889;
+$port = 3306;
 
 $conn = mysqli_connect(
    $host, 
