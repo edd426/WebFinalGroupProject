@@ -171,8 +171,9 @@ foreach ($room_ids1 as $value)
         }            
             
             
-        echo "</ul></br>
-        <a href = 'ReserveRoom.php?roomid=".$row["RoomID"]."'>Reserve This Room</a><br>";
+        echo "</ul></br>";
+        echo "<a href = 'ReserveRoom.php?roomid=".$row["RoomID"]."'>Reserve This Room</a><br>";
+        echo "<a href = 'addfavorite.php?roomid=".$row["RoomID"]."'>Favorite This Room</a><br>";
         if($_SESSION['admin']==TRUE){
             echo "<a href = 'room.php?roomid=".$row["RoomID"]."'>Update This Room</a><br>";
             echo "<a href = 'delete.php?roomid=".$row["RoomID"]."'>Delete This Room</a>";

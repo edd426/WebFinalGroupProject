@@ -60,12 +60,12 @@ INSERT INTO `room` (`Name`, `Occupancy`) VALUES
 	('RoomA', 30),
 	('RoomB', 10),
 	('RoomC', 15),
-	('RoomD', 20),
+	('RoomD', 3),
 	('RoomE', 21),
 	('RoomF', 9),
 	('RoomG', 15),
 	('RoomH', 16),
-	('RoomI', 13),
+	('RoomI', 4),
 	('RoomJ', 12);
 
 INSERT INTO `room` (`Name`, `Occupancy`, `Deleted`) VALUES
@@ -85,11 +85,11 @@ INSERT INTO `reservation` (`RoomID`, `UserID`, `StartTime`, `EndTime`, `ResDate`
 
 
 INSERT INTO `feature` (`FName`) VALUES
-	('Conference Table'),
-	('TV Screen'),
-	('Hanging Lights'),
-	('Natural Light'),
-	('Whiteboard');
+	('conference table'),
+	('tv screen'),
+	('hanging lights'),
+	('natural light'),
+	('whiteboard');
 
 INSERT INTO `room_feature` (`RoomID`, `FeatureID`) VALUES
 	('1', '1'),

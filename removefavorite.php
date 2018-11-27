@@ -7,11 +7,6 @@ if(!isset($_SESSION['userid'])) {
     header("Location: login.html");
 }
 
-if (!$_SESSION['admin']){
-    header("Location: home1.php"); // check this
-}
-
-
 $dbuser = 'root';
 $dbpass = 'root';
 $db = 'meeting';
@@ -32,12 +27,16 @@ if (!$conn){
 	exit;
 }
 
+$userid=$_SESSION['userid'];
+$roomid=$_GET['roomid'];
+
 if(isset($_GET['roomid'])){
     $roomid=$_GET['roomid'];
-    $sql = "UPDATE room SET Deleted=TRUE WHERE RoomID=$roomid;";
+
+    $sql = "DELETE FROM favorite WHERE UserID='$userid' AND RoomID='$roomid';";
     $result = mysqli_query($conn, $sql);
 }
-header('Location: home1.php');
+header('Location: user.php');
 
 
 ?>

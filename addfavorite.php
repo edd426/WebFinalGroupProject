@@ -1,3 +1,4 @@
+
 <?php
 //Start session
 session_start();
@@ -6,11 +7,6 @@ if(!isset($_SESSION['userid'])) {
     var_dump($_SESSION);
     header("Location: login.html");
 }
-
-if (!$_SESSION['admin']){
-    header("Location: home1.php"); // check this
-}
-
 
 $dbuser = 'root';
 $dbpass = 'root';
@@ -32,9 +28,12 @@ if (!$conn){
 	exit;
 }
 
+$userid=$_SESSION['userid'];
+$roomid=$_GET['roomid'];
+
 if(isset($_GET['roomid'])){
     $roomid=$_GET['roomid'];
-    $sql = "UPDATE room SET Deleted=TRUE WHERE RoomID=$roomid;";
+    $sql = "INSERT INTO favorite (UserID, RoomID) VALUES ('$userid', '$roomid');";
     $result = mysqli_query($conn, $sql);
 }
 header('Location: home1.php');
