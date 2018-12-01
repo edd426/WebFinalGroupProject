@@ -69,7 +69,7 @@ $(document).ready(function() {
                 $.ajax
                 ({
                     type: "POST",
-                    url: "signup.php",
+                    url: "signup1.php",
                     data: { Email: email, Password: password},
                     async: false,
                     success: function(response)
