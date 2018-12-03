@@ -4,9 +4,10 @@ img
     margin-right: 10px;
 }
 
-ul {
-    margin-left: 200px;
-  }
+ul 
+{
+    list-style-position: inside;
+}
 
 .col-2
 {
@@ -39,4 +40,9 @@ div
     background-color: #347B98;
     color: white;
     font-size: 16pt;
+}
+
+h5
+{
+    margin-top: 20px;
 }

@@ -21,7 +21,7 @@ $(document).ready(function() {
         $.ajax
             ({
                 type: "GET",
-                url: '../reservationTime.php',
+                url: 'reservationTime.php',
                 data: { Date: date, RoomID: roomID},
                 success: function(response)
                 {
@@ -40,30 +40,37 @@ $(document).ready(function() {
 
     $('#reservationForm').submit(function(e){
         var timeBlocks = $(".selected");
-        var prev = timeBlocks[0].id;
         var error = false;
         var i;
-        for(i = 0; i<timeBlocks.length; i++)
+        if(timeBlocks.length == 0)
         {
-            if(timeBlocks[i].id - prev > 1)
-            {
-                error = true;
-            }
-            prev = timeBlocks[i].id;
-        }
-
-        if(!error)
-        {
-            var startTime = timeBlocks[0].id;
-            var endTime = timeBlocks[timeBlocks.length-1].id;
-            var userID = $("#userid").text();
-            window.location.href = '../saveReservation.php/?roomID='+roomID+'&userID='+userID+'&startTime='+startTime+'&endTime='+endTime+'&resDate='+date;
-            
-            
+            $("#errorMessage").text("Please select a block of time for your meeting");
         }
         else
         {
-            $("#errorMessage").text("You can only schedule one meeting at a time");
+            var prev = timeBlocks[0].id;
+            for(i = 0; i<timeBlocks.length; i++)
+            {
+                if(timeBlocks[i].id - prev > 1)
+                {
+                    error = true;
+                }
+                prev = timeBlocks[i].id;
+            }
+
+            if(!error)
+            {
+                var startTime = timeBlocks[0].id;
+                var endTime = timeBlocks[timeBlocks.length-1].id;
+                var userID = $("#userid").text();
+                window.location.href = 'saveReservation.php/?roomID='+roomID+'&userID='+userID+'&startTime='+startTime+'&endTime='+endTime+'&resDate='+date;
+            
+            
+            }
+            else
+            {
+                $("#errorMessage").text("You can only schedule one meeting at a time");
+            }
         }
         e.preventDefault();
     });

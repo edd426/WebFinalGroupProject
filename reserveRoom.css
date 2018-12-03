@@ -1,4 +1,5 @@
-body{
+body
+{
     background-color: #E4F1F6;
 }
 
@@ -20,4 +21,26 @@ td.selected
 th
 {
     text-align: left;
+}
+
+.reservation
+{
+    margin: 25px;
+}
+
+#errorMessage
+{
+    background-color: pink;
+    display: inline;
+}
+
+.form-row
+{
+    margin-top: 10px;
+}
+
+
+.btn
+{
+    margin-left: 5px;
 }

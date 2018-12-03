@@ -4,7 +4,7 @@ session_start();
 if(!isset($_SESSION['userid'])) {
     echo "<p>session not set</p>";
     var_dump($_SESSION);
-    header("location: login.html");
+    header("location: login.php");
 }
 
 $page = $_GET["page"];
@@ -146,6 +146,11 @@ $start = $page * $room_limit;
 $end = $start + $room_limit - 1;
 $count = 0;
 
+if(count($room_ids1)<1)
+{
+    echo "<h5>No rooms found</h5>";
+}
+
 foreach ($room_ids1 as $value)
 {
     if($count >= $start and $count <= $end)
@@ -171,9 +176,8 @@ foreach ($room_ids1 as $value)
         }            
             
             
-        echo "</ul></br>";
-        echo "<a href = 'ReserveRoom.php?roomid=".$row["RoomID"]."'>Reserve This Room</a><br>";
-        echo "<a href = 'addfavorite.php?roomid=".$row["RoomID"]."'>Favorite This Room</a><br>";
+        echo "</ul></br>
+        <a href = 'ReserveRoom.php?roomid=".$row["RoomID"]."'>Reserve This Room</a><br>";
         if($_SESSION['admin']==TRUE){
             echo "<a href = 'room.php?roomid=".$row["RoomID"]."'>Update This Room</a><br>";
             echo "<a href = 'delete.php?roomid=".$row["RoomID"]."'>Delete This Room</a>";

@@ -3,7 +3,7 @@ session_start();
 if(!isset($_SESSION['userid'])) {
     echo "<p>session not set</p>";
     var_dump($_SESSION);
-    header("location: login.html");
+    header("location: login.php");
 }
 ?>
 <html lang="en">
@@ -27,11 +27,6 @@ if(!isset($_SESSION['userid'])) {
       <a class="nav-item nav-link active" href="home1.php">Home <span class="sr-only">(current)</span></a>
       <a class="nav-item nav-link" href="user.php">My Page</a>
       <a class="nav-item nav-link" href="logout.php">Logout</a>
-      <?php 
-        if($_SESSION['admin']){
-            echo "<a class='nav-item nav-link' href='room.php'>Add Room</a>";
-        }
-      ?>
     </div>
   </div>
 </nav>
@@ -64,7 +59,7 @@ if(!isset($_SESSION['userid'])) {
             <input name = "search" class="form-control" type="search" id="search">
         </div>
         <button class="btn btn-primary" type="submit">Filter</button>
-        <a class="btn btn-secondary" href="home1.php" role="button">Clear</a>
+        <a class="btn btn-secondary" href="home.html" role="button">Clear</a>
     </form>
     </div>
     <div id = "rooms" class = "col-10">

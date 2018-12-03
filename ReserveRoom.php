@@ -30,6 +30,7 @@ if(!isset($_SESSION['userid'])) {
     </div>
   </div>
 </nav>
+<div class = "reservation">
 <?php
 echo "<p id = 'userid' hidden>".$_SESSION["userid"]."</p>";
 $roomID = $_GET["roomid"];
@@ -63,20 +64,26 @@ while($row = mysqli_fetch_array($result))
     echo "<h1>".$row["Name"]."</h1>";
 }
 ?>
-
-<form id = "reservationForm">
-<div class = "form-row">
-  <div class = "col-3">
-    Date: <input class= "form-control" id="MeetingDate" type='date' min='2018-01-01' value = "" size = "10"></input>
+  <div class = "row"><img class="img-thumbnail" src = "Images/<?php echo $roomID;?>.jpg"></img></br>
+  </div>
+    <form id = "reservationForm">
+      <div class = "form-row">
+        <div class = "col-3">
+          Select a date <input class= "form-control" id="MeetingDate" type='date' min='2018-01-01' value = "" size = "10"></input>
+        </div>
+      </div>
+  <div class = "form-row">
+    <div class = "col-6" id = "schedule">
+    </div>
+  </div>
+  <div class = "form-row">
+    <input id = "submit" class="btn btn-primary" type = "submit" value = "Save Reservation" disabled></input>
+    <input type = "button" class="btn btn-danger" value = "Cancel" onClick = "window.location.href = 'home1.php'"></button>
+  </div>
+  <div class = "form-row">
+    <p id ="errorMessage"></p>
+  </div>
+  </form>
 </div>
-</div>
-
-<div id = "schedule">
-</div>
-<input id = "submit" class="btn btn-primary" type = "submit" value = "Save Reservation" disabled></input>
-<input type = "button" class="btn btn-danger" value = "Cancel" onClick = "window.location.href = 'home1.php'"></button>
-<p id ="errorMessage"></p>
-
-</form>
 </body>
 </html>

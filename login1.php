@@ -26,13 +26,13 @@ $password = $_POST["password"];
 if(empty($email) || empty($password))
 {
     mysqli_close();
-    header('Location: login.html');
+    header('Location: login.php?message=1');
 }
 elseif(!validate($email, $password))
 {
     mysqli_close();
     echo "Failure to Login";
-    header('Location: login.html');
+    header('Location: login.php?message=1');
 }
 else
 {
@@ -96,7 +96,6 @@ function validate($em, $pass)
         }
     }
 }
-
 ?>
 
 

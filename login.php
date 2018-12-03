@@ -5,6 +5,7 @@ if(isset($_SESSION['userid'])) {
     var_dump($_SESSION);
     header("location: home1.php");
 }
+$message = $_GET['message'];
 ?>
 
 <html>
@@ -34,6 +35,12 @@ if(isset($_SESSION['userid'])) {
             <div class = "form-row">
                 <input type="submit" class="btn btn-primary" value="Submit">
             </div>
+            <?php
+                if($message == 1)
+                {
+                    echo "<p id ='errorMessage'>Login Failed</p>";
+                }
+            ?>
             <div class = "form-row">
                 <a href = "signup.php">Sign up here</a>
             </div>

@@ -1,5 +1,17 @@
+body{
+	background-color: #347B98;
+}
+
+#signupForm{
+	margin: 10 auto;
+	background-color: #E4F1F6;
+	width: 40%;
+	padding: 20px;
+}
+
 .form-row{
 	margin: 20px;
+	
 }
 
 .form-group{
@@ -18,4 +30,9 @@
 
 .error{
     background: pink;
+}
+
+.btn
+{
+    margin-left: 5px;
 }
