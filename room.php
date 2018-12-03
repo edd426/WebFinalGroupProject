@@ -96,87 +96,13 @@ $result = mysqli_query($conn, $sql);
 while($row = mysqli_fetch_array($result))
     $roomfeaturenames[$row['FeatureID']] = $row['FName'];
 
-// insert the form below
-?>
-    <div class='form-row'>
-    <div class='col-6'>
-    <div class='card'>
-    <div class='card-header'>
-        <h3>Add/Update A Room</h3>
-        <h6>Room Name, Occupancy, and Photo required.</h6>
-    </div>
-    </div>
-    </div>
-    </div>
-    <form action='' method='POST' enctype='multipart/form-data'>
-        <div class="form-row">
-            <div class="col-6">
-                <div class='card'>
-                    <div class='card-header'>
-                        Room Name
-                    </div>
-                    <div class='card-body'>
-                        <input type="text" class ="form-control" id="RoomName" name="roomname" placeholder="Name" value="<?php echo $roomname; ?>" novalidate> 
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="col-6">
-                <div class='card'>
-                    <div class='card-header'>
-                        Room Occupancy
-                    </div>
-                    <div class='card-body'>
-                        <input type="text" class="form-control" id="Occupancy" name="roomoccupancy" value="<?php echo $occupancy; ?>"  placeholder="Occupancy">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="col-6">
-                <div class='card'>
-                    <div class='card-header'>
-                        Room Features
-                    </div>
-                    <div class='card-body'>
-                        <?php
-                        for ($i=0; $i<10; $i++){
-                            $myfeature = ($i < count($roomfeatureids)) ? $roomfeaturenames[$roomfeatureids[$i]] : '';
-                            echo "<input type='text' class='form-control' name='id[$i]' value='$myfeature'  placeholder='Feature'>";
-                        }
-                        ?>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="form-row">
-            <div class="col-6">
-                <div class='card'>
-                    <div class='card-header'>
-                        Room Photo
-                    </div>
-                    <div class='card-body'>
-                        <input type='file' name='userFile'><br>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="col-4">
-                <button type="submit" class="btn btn-primary" value='upload'>Submit</button>
-                </br>
-            </div>
-        </div>
-    </form>
-</body>
-</html>
 
-<?php
+
 // Get info from form
 //
 // Get the image
+
 $info = pathinfo($_FILES['userFile']['name']);
 $ext = $info['extension']; // get the extension of the file
 
@@ -242,8 +168,85 @@ if($newname!='' && $newoccupancy!='' && is_uploaded_file($_FILES['userFile']['tm
 
     mysqli_close();
     header("location: home1.php");
+    
 }
-
 mysqli_close();
+
+
+// insert the form below
 ?>
+    <div class='form-row'>
+    <div class='col-6'>
+    <div class='card'>
+    <div class='card-header'>
+        <h3>Add/Update A Room</h3>
+        <h6>Room Name, Occupancy, and Photo required.</h6>
+    </div>
+    </div>
+    </div>
+    </div>
+    <form action='' method='POST' enctype='multipart/form-data'>
+        <div class="form-row">
+            <div class="col-6">
+                <div class='card'>
+                    <div class='card-header'>
+                        Room Name
+                    </div>
+                    <div class='card-body'>
+                        <input type="text" class ="form-control" id="RoomName" name="roomname" placeholder="Name" value="<?php echo $roomname; ?>" novalidate> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-6">
+                <div class='card'>
+                    <div class='card-header'>
+                        Room Occupancy
+                    </div>
+                    <div class='card-body'>
+                        <input type="text" class="form-control" id="Occupancy" name="roomoccupancy" value="<?php echo $occupancy; ?>"  placeholder="Occupancy">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-6">
+                <div class='card'>
+                    <div class='card-header'>
+                        Room Features
+                    </div>
+                    <div class='card-body'>
+                        <?php
+                        for ($i=0; $i<10; $i++){
+                            $myfeature = ($i < count($roomfeatureids)) ? $roomfeaturenames[$roomfeatureids[$i]] : '';
+                            echo "<input type='text' class='form-control' name='id[$i]' value='$myfeature'  placeholder='Feature'>";
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="col-6">
+                <div class='card'>
+                    <div class='card-header'>
+                        Room Photo
+                    </div>
+                    <div class='card-body'>
+                        <input type='file' name='userFile'><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-4">
+                <button type="submit" class="btn btn-primary" value='upload'>Submit</button>
+                </br>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
 

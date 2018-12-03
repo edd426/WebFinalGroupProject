@@ -1,11 +1,10 @@
 <?php
-    //Start session
     session_start();
     if(!isset($_SESSION['userid'])) {
         echo "<p>session not set</p>";
         var_dump($_SESSION);
-        header("location: login.html");
-    }
+        header("location: login.php");
+    }   
     $suserid = $_SESSION['userid'];
 ?>
 
@@ -38,16 +37,7 @@
 <div class='row'>
   <div class='col'>
 
-<?
-//Start session
-session_start();
-if(!isset($_SESSION['userid'])) {
-    echo "<p>session not set</p>";
-    var_dump($_SESSION);
-    header("location: login.html");
-}
-$suserid = $_SESSION['userid'];
-
+<?php
 echo "";
 echo "<div class='card'><div class='card-header'><h3>Your Page</h3></div></div><br>";
 
@@ -100,8 +90,7 @@ while($row = mysqli_fetch_array($result)){
     echo "<tr><td>". $timeArr[$row["StartTime"]] ."</td><td>". 
         $timeArr[$row["EndTime"]]."</td><td>". $row["ResDate"].
         "</td><td>". $row["Name"].
-        "</td><td><a href='http://localhost:81/WebFinalGroupProject/".
-        "user.php?deleteRes=".$row["ResID"]."'>Delete</a></td></tr>";
+        "</td><td><a href='user.php?deleteRes=". $row['ResID']. "'>Delete</a></td></tr>";
 }
 echo "</table></div></div>";
 

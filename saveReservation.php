@@ -35,7 +35,7 @@ if ($conn->query($sql) === TRUE)
 {
     mysqli_close($conn);
     echo "New record created successfully";
-    header('Location: '.'../home.html');
+    header('Location: '.'../home1.php');
 } else 
 {
     mysqli_close($conn);
